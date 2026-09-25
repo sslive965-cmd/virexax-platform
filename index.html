@@ -3,411 +3,534 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>VIREXA X | Premium Virtual Cards Platform</title>
-
-<meta name="description" content="VIREXA X - 24/7 Available, 100% Trusted Virtual Cards Platform. Secure Payments, Instant Delivery, Premium Digital Services.">
-
-<meta name="keywords" content="VIREXA X, Virtual Cards, Digital Payments, Visa Virtual Card, Mastercard Virtual Card">
-
-<meta name="robots" content="index, follow">
-
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
-
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:'Orbitron',sans-serif;
-}
-
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
 body{
-background:#050505;
-color:white;
-overflow-x:hidden;
+  font-family:'Orbitron',sans-serif;
+  background:#050505;
+  color:#fff;
+  min-height:100vh;
+  overflow-x:hidden;
+}
+body:before{
+  content:"";position:fixed;inset:0;z-index:-2;
+  background:
+    radial-gradient(circle at 20% 15%,rgba(255,0,0,.13),transparent 35%),
+    radial-gradient(circle at 80% 45%,rgba(255,0,0,.10),transparent 38%),
+    radial-gradient(circle at 45% 90%,rgba(255,0,0,.12),transparent 35%);
+}
+button,a{font:inherit}
+button{cursor:pointer}
+.hidden{display:none!important}
+
+/* ENTRY SCREEN */
+#entryScreen{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:24px;
+}
+.entry-card{
+  width:min(430px,100%);
+  padding:42px 28px 34px;
+  text-align:center;
+  border:1px solid rgba(255,0,0,.65);
+  border-radius:30px;
+  background:rgba(25,5,5,.72);
+  box-shadow:0 0 45px rgba(255,0,0,.22);
+}
+.entry-logo{
+  font-size:2.25rem;
+  font-weight:700;
+  color:#ff1616;
+  text-shadow:0 0 18px rgba(255,0,0,.85);
+  margin-bottom:12px;
+}
+.entry-sub{
+  color:#ddd;
+  font-size:.95rem;
+  line-height:1.55;
+  margin-bottom:28px;
+}
+.entry-card .mini-points{
+  display:flex;
+  justify-content:center;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-bottom:28px;
+}
+.mini-point{
+  border:1px solid rgba(255,0,0,.55);
+  border-radius:30px;
+  padding:9px 13px;
+  color:#eee;
+  font-size:.72rem;
+}
+.enter-btn{
+  width:100%;
+  border:0;
+  border-radius:50px;
+  padding:16px 20px;
+  color:#fff;
+  background:#ff0808;
+  box-shadow:0 0 25px rgba(255,0,0,.45);
+  font-size:1rem;
+  font-weight:600;
 }
 
-body::before{
-content:'';
-position:fixed;
-width:100%;
-height:100%;
-background:
-radial-gradient(circle at 20% 20%, rgba(255,0,0,0.15), transparent 40%),
-radial-gradient(circle at 80% 30%, rgba(255,0,0,0.15), transparent 40%),
-radial-gradient(circle at 50% 80%, rgba(255,0,0,0.15), transparent 40%);
-z-index:-1;
+/* STORE */
+#storeApp{display:none}
+.topbar{
+  position:sticky;top:0;z-index:100;
+  min-height:70px;
+  display:flex;align-items:center;gap:18px;
+  padding:12px 22px;
+  border-bottom:1px solid rgba(255,0,0,.28);
+  background:rgba(7,4,4,.94);
+  backdrop-filter:blur(14px);
 }
-
-header{
-padding:25px;
-display:flex;
-justify-content:space-between;
-align-items:center;
-border-bottom:1px solid rgba(255,0,0,.3);
-backdrop-filter:blur(10px);
-}
-
 .logo{
-font-size:2rem;
-font-weight:800;
-color:#ff0000;
-text-shadow:0 0 20px #ff0000;
+  color:#ff1111;
+  font-size:1.45rem;
+  font-weight:700;
+  text-shadow:0 0 14px rgba(255,0,0,.7);
+  white-space:nowrap;
+}
+.nav-icons{
+  display:flex;align-items:center;gap:8px;
+  margin-left:auto;
+}
+.nav-btn{
+  min-width:42px;height:40px;
+  border:1px solid transparent;
+  border-radius:12px;
+  background:transparent;
+  color:#eee;
+  display:flex;align-items:center;justify-content:center;
+  font-size:.85rem;
+}
+.nav-btn:hover,.nav-btn.active{
+  border-color:rgba(255,0,0,.55);
+  background:rgba(255,0,0,.10);
+}
+.profile-btn{
+  border:1px solid rgba(255,0,0,.55);
+  background:#210707;
+  color:#fff;
+  border-radius:24px;
+  padding:9px 14px;
+  display:flex;align-items:center;gap:9px;
+  max-width:170px;
+}
+.avatar{
+  width:28px;height:28px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  background:#ff1515;color:#fff;font-size:.72rem;font-weight:700;
+}
+.profile-name{
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  font-size:.78rem;
 }
 
-nav a{
-color:white;
-text-decoration:none;
-margin-left:20px;
-transition:.3s;
+/* STORE HERO */
+.store-hero{
+  max-width:1050px;margin:auto;
+  padding:58px 20px 35px;
+  text-align:center;
 }
-
-nav a:hover{
-color:#ff0000;
+.store-hero h1{
+  font-size:2.5rem;
+  color:#fff;
+  margin-bottom:10px;
 }
-
-.hero{
-min-height:90vh;
-display:flex;
-flex-direction:column;
-justify-content:center;
-align-items:center;
-text-align:center;
-padding:30px;
+.store-hero h1 span{color:#ff1111;text-shadow:0 0 16px rgba(255,0,0,.6)}
+.store-hero h2{
+  font-size:1.25rem;
+  font-weight:500;
+  color:#ddd;
+  margin-bottom:14px;
 }
-
-.hero h1{
-font-size:4rem;
-color:#ff0000;
-text-shadow:
-0 0 10px #ff0000,
-0 0 20px #ff0000,
-0 0 40px #ff0000;
+.store-hero p{
+  color:#aaa;
+  font-size:.82rem;
+  line-height:1.7;
+  max-width:720px;
+  margin:auto;
 }
-
-.hero h2{
-font-size:1.3rem;
-margin-top:15px;
-color:#ddd;
+.pills{
+  display:flex;justify-content:center;flex-wrap:wrap;gap:10px;
+  margin:22px 0 30px;
 }
-
-.badges{
-display:flex;
-flex-wrap:wrap;
-justify-content:center;
-gap:15px;
-margin-top:35px;
+.pill{
+  padding:9px 15px;
+  border:1px solid rgba(255,0,0,.6);
+  border-radius:30px;
+  background:rgba(255,0,0,.06);
+  color:#eee;
+  font-size:.72rem;
 }
-
-.badge{
-padding:12px 20px;
-border:1px solid #ff0000;
-border-radius:50px;
-background:rgba(255,0,0,.08);
-box-shadow:0 0 15px rgba(255,0,0,.3);
+.card-visual{
+  width:min(570px,92%);
+  margin:20px auto 55px;
+  padding:26px;
+  min-height:260px;
+  border-radius:24px;
+  text-align:left;
+  background:linear-gradient(135deg,#170707,#090909);
+  border:1px solid rgba(255,0,0,.55);
+  box-shadow:0 0 45px rgba(255,0,0,.18);
 }
-
-.buttons{
-margin-top:40px;
-display:flex;
-gap:20px;
-flex-wrap:wrap;
-justify-content:center;
+.card-visual .visa{
+  font-size:1.25rem;font-weight:700;
+  margin-bottom:38px;
 }
-
-.btn{
-padding:15px 35px;
-border:none;
-border-radius:50px;
-cursor:pointer;
-font-weight:bold;
-font-size:1rem;
-transition:.3s;
+.card-number{
+  letter-spacing:.28em;
+  font-size:1rem;
+  color:#ddd;
+  margin-bottom:34px;
 }
-
-.primary{
-background:#ff0000;
-color:white;
-box-shadow:0 0 25px #ff0000;
+.card-bottom{
+  display:flex;justify-content:space-between;gap:20px;
+  color:#aaa;font-size:.68rem;
 }
+.card-bottom strong{display:block;color:#fff;font-size:.85rem;margin-top:5px}
 
-.primary:hover{
-transform:translateY(-3px);
+.section{
+  max-width:1050px;
+  margin:auto;
+  padding:35px 20px 70px;
 }
-
-.secondary{
-background:transparent;
-border:2px solid #ff0000;
-color:white;
+.section-title{
+  text-align:center;
+  color:#ff1111;
+  text-shadow:0 0 15px rgba(255,0,0,.5);
+  font-size:1.8rem;
+  margin-bottom:30px;
 }
-
-section{
-padding:80px 20px;
-}
-
-.title{
-text-align:center;
-font-size:2rem;
-margin-bottom:50px;
-color:#ff0000;
-text-shadow:0 0 15px #ff0000;
-}
-
 .cards{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
-gap:25px;
-max-width:1200px;
-margin:auto;
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:18px;
 }
-
-.card{
-background:rgba(255,255,255,.04);
-border:1px solid rgba(255,0,0,.4);
-padding:25px;
-border-radius:20px;
-backdrop-filter:blur(15px);
-transition:.3s;
+.product{
+  padding:23px;
+  border:1px solid rgba(255,0,0,.38);
+  border-radius:20px;
+  background:rgba(255,255,255,.035);
 }
-
-.card:hover{
-transform:translateY(-10px);
-box-shadow:0 0 25px rgba(255,0,0,.5);
+.product h3{font-size:1rem;color:#ff2222;margin-bottom:10px}
+.product p{font-family:Arial,sans-serif;color:#bbb;font-size:.9rem;line-height:1.55}
+.product .buy{
+  margin-top:17px;
+  border:1px solid #ff1111;
+  border-radius:30px;
+  padding:10px 16px;
+  background:#ff1111;
+  color:#fff;
+  font-size:.75rem;
 }
-
-.card h3{
-color:#ff0000;
-margin-bottom:15px;
+.features{
+  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:15px;
 }
-
-.stats{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
-gap:25px;
-max-width:1000px;
-margin:auto;
+.feature{
+  text-align:center;padding:22px 12px;
+  border:1px solid rgba(255,0,0,.3);
+  border-radius:18px;background:rgba(255,255,255,.03);
 }
-
-.stat{
-text-align:center;
-padding:25px;
-border-radius:20px;
-background:rgba(255,255,255,.04);
-border:1px solid rgba(255,0,0,.4);
-}
-
-.stat h2{
-font-size:2.5rem;
-color:#ff0000;
-}
-
-.trust{
-max-width:1000px;
-margin:auto;
-text-align:center;
-padding:50px;
-border-radius:25px;
-border:2px solid #ff0000;
-box-shadow:0 0 30px rgba(255,0,0,.5);
-}
-
-.trust h2{
-color:#ff0000;
-margin-bottom:20px;
-}
+.feature strong{display:block;color:#ff1515;font-size:1.35rem;margin-bottom:8px}
+.feature span{font-size:.72rem;color:#ccc}
 
 .contact{
-text-align:center;
+  text-align:center;padding:25px 20px 70px;
 }
-
-.contact a{
-display:inline-block;
-margin:10px;
-padding:15px 25px;
-border-radius:50px;
-background:#ff0000;
-color:white;
-text-decoration:none;
+.telegram{
+  display:inline-block;
+  padding:13px 24px;
+  border-radius:35px;
+  background:#ff1111;color:#fff;text-decoration:none;
+  font-size:.8rem;
 }
-
 footer{
-padding:30px;
-text-align:center;
-border-top:1px solid rgba(255,0,0,.3);
-margin-top:50px;
+  padding:25px 20px 35px;text-align:center;
+  border-top:1px solid rgba(255,0,0,.22);
+  color:#777;font-size:.7rem;
 }
 
+/* AUTH */
+.overlay{
+  position:fixed;inset:0;z-index:1000;
+  display:none;align-items:center;justify-content:center;
+  padding:20px;
+  background:rgba(0,0,0,.82);
+  backdrop-filter:blur(10px);
+}
+.overlay.show{display:flex}
+.auth-box{
+  width:min(390px,100%);
+  background:#100808;
+  border:1px solid rgba(255,0,0,.6);
+  border-radius:22px;
+  padding:24px;
+  box-shadow:0 0 40px rgba(255,0,0,.25);
+  position:relative;
+}
+.close{
+  position:absolute;right:13px;top:9px;
+  border:0;background:none;color:#aaa;font-size:24px;
+}
+.auth-box h2{
+  text-align:center;color:#ff1616;font-size:1.3rem;
+  margin-bottom:7px;
+}
+.auth-box .sub{
+  text-align:center;color:#999;font-size:.68rem;margin-bottom:20px;
+}
+.tabs{display:flex;gap:8px;margin-bottom:15px}
+.tab{
+  flex:1;padding:10px;border-radius:11px;
+  border:1px solid rgba(255,0,0,.4);
+  background:transparent;color:#aaa;font-size:.75rem;
+}
+.tab.active{background:#ff1111;color:#fff}
+.form{display:flex;flex-direction:column;gap:10px}
+.form input{
+  width:100%;padding:12px 13px;border-radius:10px;
+  border:1px solid rgba(255,0,0,.35);
+  background:#070707;color:#fff;outline:none;font-family:Arial,sans-serif;
+}
+.form button{
+  margin-top:4px;padding:12px;border:0;border-radius:25px;
+  background:#ff1111;color:#fff;font-weight:700;font-size:.8rem;
+}
+.msg{text-align:center;min-height:18px;margin-top:9px;color:#ff7777;font-size:.68rem}
+.switch{text-align:center;margin-top:12px;color:#888;font-size:.65rem}
+.switch button{border:0;background:none;color:#ff2222;font-size:.65rem}
 
-/* VIREXA X AUTH MODAL */
-.auth-overlay{position:fixed;inset:0;background:rgba(0,0,0,.82);backdrop-filter:blur(12px);display:none;align-items:center;justify-content:center;z-index:9999;padding:20px;}
-.auth-overlay.active{display:flex;}
-.auth-box{width:min(420px,100%);background:rgba(15,15,15,.96);border:1px solid rgba(255,0,0,.65);border-radius:24px;padding:28px;box-shadow:0 0 40px rgba(255,0,0,.35);position:relative;}
-.auth-box h2{color:#ff0000;text-align:center;margin-bottom:8px;text-shadow:0 0 15px #ff0000;}
-.auth-sub{text-align:center;color:#aaa;font-size:.8rem;margin-bottom:22px;}
-.auth-tabs{display:flex;gap:8px;margin-bottom:18px;}
-.auth-tab{flex:1;padding:11px;border:1px solid rgba(255,0,0,.4);background:transparent;color:#aaa;border-radius:12px;cursor:pointer;}
-.auth-tab.active{background:#ff0000;color:#fff;box-shadow:0 0 18px rgba(255,0,0,.4);}
-.auth-form{display:flex;flex-direction:column;gap:12px;}
-.auth-form input{width:100%;padding:14px 15px;border-radius:12px;border:1px solid rgba(255,0,0,.35);background:#090909;color:#fff;outline:none;}
-.auth-form input:focus{border-color:#ff0000;box-shadow:0 0 12px rgba(255,0,0,.2);}
-.auth-submit{width:100%;margin-top:4px;}
-.auth-close{position:absolute;right:16px;top:12px;background:none;border:0;color:#aaa;font-size:28px;cursor:pointer;}
-.auth-msg{text-align:center;min-height:20px;font-size:.8rem;color:#ff7777;margin-top:8px;}
-.auth-switch{text-align:center;color:#aaa;font-size:.75rem;margin-top:14px;}
-.auth-switch button{background:none;border:0;color:#ff0000;cursor:pointer;}
-.dashboard-btn{display:none;}
-@media(max-width:600px){.auth-box{padding:22px;}.hero h1{font-size:2.7rem;}nav{display:none;}}
+/* PROFILE PANEL */
+.profile-overlay{
+  position:fixed;inset:0;z-index:900;
+  display:none;justify-content:flex-end;
+  background:rgba(0,0,0,.58);
+  backdrop-filter:blur(5px);
+}
+.profile-overlay.show{display:flex}
+.profile-panel{
+  width:min(420px,100%);
+  height:100%;
+  overflow:auto;
+  padding:25px 20px;
+  background:#0d0606;
+  border-left:1px solid rgba(255,0,0,.55);
+  box-shadow:-10px 0 35px rgba(255,0,0,.16);
+}
+.profile-head{display:flex;align-items:center;gap:13px;margin-bottom:22px}
+.big-avatar{
+  width:55px;height:55px;border-radius:50%;
+  background:#ff1111;display:flex;align-items:center;justify-content:center;
+  font-size:1.2rem;font-weight:700;
+}
+.profile-head h3{font-size:1rem;margin-bottom:5px}
+.profile-head p{font-family:Arial,sans-serif;color:#aaa;font-size:.78rem;word-break:break-all}
+.profile-close{margin-left:auto;border:0;background:none;color:#aaa;font-size:25px}
+.info-box{
+  border:1px solid rgba(255,0,0,.35);
+  border-radius:17px;padding:16px;margin-bottom:18px;
+}
+.info-row{
+  display:flex;justify-content:space-between;gap:15px;
+  padding:11px 0;border-bottom:1px solid rgba(255,0,0,.12);
+  font-size:.72rem;
+}
+.info-row:last-child{border-bottom:0}
+.info-row span{color:#999}
+.info-row strong{text-align:right;color:#eee;word-break:break-word}
+.profile-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.profile-actions button{
+  padding:12px;border-radius:12px;font-size:.72rem;
+  border:1px solid rgba(255,0,0,.45);
+  background:#170707;color:#fff;
+}
+.profile-actions .logout{background:#ff1111;border-color:#ff1111}
 
+@media(max-width:700px){
+  .topbar{padding:11px 14px}
+  .logo{font-size:1.25rem}
+  .nav-btn{display:none}
+  .store-hero{padding-top:42px}
+  .store-hero h1{font-size:2rem}
+  .store-hero h2{font-size:1.05rem}
+  .cards{grid-template-columns:1fr}
+  .features{grid-template-columns:repeat(2,1fr)}
+  .profile-name{max-width:75px}
+}
+@media(max-width:420px){
+  .entry-logo{font-size:1.9rem}
+  .store-hero h1{font-size:1.75rem}
+  .card-visual{min-height:225px;padding:20px}
+  .card-number{font-size:.82rem;letter-spacing:.18em}
+  .features{gap:10px}
+}
 </style>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 
 <body>
 
-<header>
-<div class="logo">VIREXA X</div>
-
-<nav>
-<a href="#cards">Cards</a>
-<a href="#trust">Trust</a>
-<a href="#contact">Contact</a>
-</nav>
-</header>
-
-<section class="hero">
-
-<h1>VIREXA X</h1>
-
-<h2>Premium Virtual Cards Platform</h2>
-
-<div class="badges">
-<div class="badge">24/7 Available</div>
-<div class="badge">100% Trusted Store</div>
-<div class="badge">Secure Payments</div>
-<div class="badge">Instant Delivery</div>
-</div>
-
-<div class="buttons">
-<button class="btn primary">BUY NOW</button>
-<a class="btn secondary" href="https://t.me/AURA_JINWOO_S1" target="_blank" rel="noopener">CONTACT US</a>
-</div>
-
-</section>
-
-<section id="cards">
-
-<h2 class="title">Virtual Cards</h2>
-
-<div class="cards">
-
-<div class="card">
-<h3>Visa Virtual Card</h3>
-<p>Secure online payments with global support.</p>
-</div>
-
-<div class="card">
-<h3>Mastercard Virtual Card</h3>
-<p>Fast transactions and premium features.</p>
-</div>
-
-<div class="card">
-<h3>International Virtual Card</h3>
-<p>Worldwide payment compatibility.</p>
-</div>
-
-<div class="card">
-<h3>Digital Payment Card</h3>
-<p>Reliable virtual card for online services.</p>
-</div>
-
-</div>
-
-</section>
-
-<section>
-
-<h2 class="title">Why Choose Us</h2>
-
-<div class="stats">
-
-<div class="stat">
-<h2>24/7</h2>
-<p>Support</p>
-</div>
-
-<div class="stat">
-<h2>100%</h2>
-<p>Trusted Store</p>
-</div>
-
-<div class="stat">
-<h2>Fast</h2>
-<p>Delivery</p>
-</div>
-
-<div class="stat">
-<h2>Secure</h2>
-<p>Payments</p>
-</div>
-
-</div>
-
-</section>
-
-<section id="trust">
-
-<div class="trust">
-
-<h2>VERIFIED STORE</h2>
-
-<p>
-VIREXA X provides premium virtual card solutions with secure payment methods,
-trusted customer support and fast delivery services.
-</p>
-
-</div>
-
-</section>
-
-<section id="contact" class="contact">
-
-<h2 class="title">Contact Us</h2>
-
-<a href="https://t.me/AURA_JINWOO_S1" target="_blank" rel="noopener">Telegram</a>
-
-</section>
-
-<footer>
-
-<h3>VIREXA X</h3>
-
-<p>Premium Virtual Cards Platform</p>
-
-<p>© 2026 VIREXA X</p>
-
-</footer>
-
-
-<div class="auth-overlay" id="authOverlay">
-  <div class="auth-box">
-    <button class="auth-close" id="authClose" aria-label="Close">&times;</button>
-    <h2 id="authTitle">WELCOME BACK</h2>
-    <div class="auth-sub">Access your VIREXA X customer account</div>
-    <div class="auth-tabs">
-      <button class="auth-tab active" id="loginTab">LOGIN</button>
-      <button class="auth-tab" id="registerTab">REGISTER</button>
+<!-- STEP 1: ENTRY SCREEN -->
+<section id="entryScreen">
+  <div class="entry-card">
+    <div class="entry-logo">VIREXA X</div>
+    <div class="entry-sub">Premium Virtual Cards Platform</div>
+    <div class="mini-points">
+      <div class="mini-point">24/7 Available</div>
+      <div class="mini-point">Secure</div>
+      <div class="mini-point">Instant Access</div>
     </div>
-    <form class="auth-form" id="authForm">
+    <button class="enter-btn" id="enterPlatform">ENTER PLATFORM</button>
+  </div>
+</section>
+
+<!-- STEP 2+: STORE AFTER LOGIN -->
+<main id="storeApp">
+
+  <header class="topbar">
+    <div class="logo">VIREXA X</div>
+
+    <div class="nav-icons">
+      <button class="nav-btn active" onclick="scrollToTop()" aria-label="Home">⌂</button>
+      <a class="nav-btn" href="https://t.me/AURA_JINWOO_S1" target="_blank" rel="noopener" aria-label="Telegram">✈</a>
+      <button class="nav-btn" onclick="document.getElementById('cards').scrollIntoView({behavior:'smooth'})" aria-label="Cards">▤</button>
+      <button class="nav-btn" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})" aria-label="Support">◉</button>
+    </div>
+
+    <button class="profile-btn" id="profileBtn">
+      <span class="avatar" id="avatarLetter">V</span>
+      <span class="profile-name" id="profileName">Profile</span>
+    </button>
+  </header>
+
+  <section class="store-hero" id="home">
+    <h1><span>VIREXA X</span></h1>
+    <h2>Premium Virtual Cards</h2>
+    <p>Instant delivery • High limits • Global acceptance • Secure payments</p>
+
+    <div class="pills">
+      <div class="pill">⚡ Instant Delivery</div>
+      <div class="pill">🔒 Secure</div>
+      <div class="pill">🌐 All Networks</div>
+    </div>
+
+    <div class="card-visual">
+      <div class="visa">VISA</div>
+      <div class="card-number">•••• &nbsp; 4532 &nbsp; 8912 &nbsp; 3456</div>
+      <div class="card-bottom">
+        <div>VALID THRU<strong>01/28</strong></div>
+        <div>PLAN<strong>PREMIUM</strong></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="cards">
+    <h2 class="section-title">Choose Your Card</h2>
+    <div class="cards">
+      <article class="product">
+        <h3>Visa Virtual Card</h3>
+        <p>Secure online payments with global support.</p>
+        <button class="buy">BUY NOW</button>
+      </article>
+      <article class="product">
+        <h3>Mastercard Virtual Card</h3>
+        <p>Fast transactions and premium features.</p>
+        <button class="buy">BUY NOW</button>
+      </article>
+      <article class="product">
+        <h3>International Virtual Card</h3>
+        <p>Worldwide payment compatibility.</p>
+        <button class="buy">BUY NOW</button>
+      </article>
+      <article class="product">
+        <h3>Digital Payment Card</h3>
+        <p>Reliable virtual card for online services.</p>
+        <button class="buy">BUY NOW</button>
+      </article>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2 class="section-title">Why Choose Us</h2>
+    <div class="features">
+      <div class="feature"><strong>24/7</strong><span>Support</span></div>
+      <div class="feature"><strong>100%</strong><span>Trusted Store</span></div>
+      <div class="feature"><strong>Fast</strong><span>Delivery</span></div>
+      <div class="feature"><strong>Secure</strong><span>Payments</span></div>
+    </div>
+  </section>
+
+  <section class="contact" id="contact">
+    <h2 class="section-title">Contact Us</h2>
+    <a class="telegram" href="https://t.me/AURA_JINWOO_S1" target="_blank" rel="noopener">Telegram</a>
+  </section>
+
+  <footer>
+    VIREXA X · Premium Virtual Cards Platform · © 2026
+  </footer>
+</main>
+
+<!-- AUTH -->
+<div class="overlay" id="authOverlay">
+  <div class="auth-box">
+    <button class="close" id="authClose">&times;</button>
+    <h2 id="authTitle">WELCOME BACK</h2>
+    <div class="sub">Access your VIREXA X customer account</div>
+
+    <div class="tabs">
+      <button class="tab active" id="loginTab">LOGIN</button>
+      <button class="tab" id="registerTab">REGISTER</button>
+    </div>
+
+    <form class="form" id="authForm">
       <input id="authEmail" type="email" placeholder="Email address" autocomplete="email" required>
       <input id="authPassword" type="password" placeholder="Password" autocomplete="current-password" minlength="6" required>
       <input id="authUsername" type="text" placeholder="Username" autocomplete="username" style="display:none">
-      <button class="btn primary auth-submit" type="submit" id="authSubmit">LOGIN</button>
+      <button type="submit" id="authSubmit">LOGIN</button>
     </form>
-    <div class="auth-msg" id="authMsg"></div>
-    <div class="auth-switch" id="authSwitch">New here? <button type="button">Create an account</button></div>
+
+    <div class="msg" id="authMsg"></div>
+    <div class="switch" id="authSwitch">
+      New here? <button type="button">Create an account</button>
+    </div>
   </div>
+</div>
+
+<!-- CUSTOMER PROFILE PANEL -->
+<div class="profile-overlay" id="profileOverlay">
+  <aside class="profile-panel">
+    <div class="profile-head">
+      <div class="big-avatar" id="bigAvatar">V</div>
+      <div>
+        <h3 id="panelName">VIREXA Customer</h3>
+        <p id="panelEmail">—</p>
+      </div>
+      <button class="profile-close" id="profileClose">&times;</button>
+    </div>
+
+    <div class="info-box">
+      <div class="info-row"><span>Account ID</span><strong id="accountId">—</strong></div>
+      <div class="info-row"><span>Login Status</span><strong>Active</strong></div>
+      <div class="info-row"><span>Role</span><strong id="accountRole">Customer</strong></div>
+    </div>
+
+    <div class="profile-actions">
+      <button onclick="window.location.href='dashboard.html'">MY ORDERS</button>
+      <button class="logout" id="logoutBtn">LOG OUT</button>
+    </div>
+  </aside>
 </div>
 
 <script>
@@ -415,66 +538,137 @@ const SUPABASE_URL = 'https://esefauysqukcnlmpexvp.supabase.co';
 const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_ojRLCERTzPJSTbBopO0KGA_CN6DDcA_';
 const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
 
-const overlay=document.getElementById('authOverlay');
-const form=document.getElementById('authForm');
-const loginTab=document.getElementById('loginTab');
-const registerTab=document.getElementById('registerTab');
-const title=document.getElementById('authTitle');
-const submit=document.getElementById('authSubmit');
-const username=document.getElementById('authUsername');
-const msg=document.getElementById('authMsg');
-const switchBox=document.getElementById('authSwitch');
-let authMode='login';
+const entryScreen = document.getElementById('entryScreen');
+const storeApp = document.getElementById('storeApp');
+const authOverlay = document.getElementById('authOverlay');
+const authForm = document.getElementById('authForm');
+const loginTab = document.getElementById('loginTab');
+const registerTab = document.getElementById('registerTab');
+const authTitle = document.getElementById('authTitle');
+const authSubmit = document.getElementById('authSubmit');
+const authUsername = document.getElementById('authUsername');
+const authMsg = document.getElementById('authMsg');
+const authSwitch = document.getElementById('authSwitch');
+const profileOverlay = document.getElementById('profileOverlay');
 
-function showAuth(mode='login'){
-  authMode=mode; overlay.classList.add('active'); msg.textContent='';
-  const register=mode==='register';
-  title.textContent=register?'CREATE ACCOUNT':'WELCOME BACK';
-  submit.textContent=register?'CREATE ACCOUNT':'LOGIN';
-  loginTab.classList.toggle('active',!register); registerTab.classList.toggle('active',register);
-  username.style.display=register?'block':'none'; username.required=register;
-  document.getElementById('authPassword').autocomplete=register?'new-password':'current-password';
-  switchBox.innerHTML=register?'Already have an account? <button type="button">Login</button>':'New here? <button type="button">Create an account</button>';
-  switchBox.querySelector('button').onclick=()=>showAuth(register?'login':'register');
+let authMode = 'login';
+let currentUser = null;
+
+function showStore(user){
+  currentUser = user || currentUser;
+  entryScreen.classList.add('hidden');
+  storeApp.style.display = 'block';
+
+  if(currentUser){
+    const email = currentUser.email || 'Customer';
+    const name = currentUser.user_metadata?.username || email.split('@')[0] || 'Customer';
+    const initial = name.charAt(0).toUpperCase();
+
+    document.getElementById('profileName').textContent = name;
+    document.getElementById('panelName').textContent = name;
+    document.getElementById('panelEmail').textContent = email;
+    document.getElementById('avatarLetter').textContent = initial;
+    document.getElementById('bigAvatar').textContent = initial;
+    document.getElementById('accountId').textContent =
+      currentUser.id ? 'VX-' + currentUser.id.slice(0,8).toUpperCase() : '—';
+    document.getElementById('accountRole').textContent =
+      currentUser.user_metadata?.role || 'Customer';
+  }
 }
 
-function closeAuth(){overlay.classList.remove('active');form.reset();}
+function showEntry(){
+  currentUser = null;
+  storeApp.style.display = 'none';
+  entryScreen.classList.remove('hidden');
+}
 
-document.querySelector('.primary').addEventListener('click',()=>showAuth('login'));
-document.getElementById('authClose').addEventListener('click',closeAuth);
-overlay.addEventListener('click',e=>{if(e.target===overlay)closeAuth();});
-loginTab.onclick=()=>showAuth('login'); registerTab.onclick=()=>showAuth('register');
+function showAuth(mode='login'){
+  authMode = mode;
+  authOverlay.classList.add('show');
+  authMsg.textContent = '';
 
-form.addEventListener('submit',async e=>{
-  e.preventDefault(); msg.textContent='Processing...'; submit.disabled=true;
-  const email=document.getElementById('authEmail').value.trim();
-  const password=document.getElementById('authPassword').value;
-  try{
-    if(authMode==='register'){
-      const uname=username.value.trim();
-      const {data,error}=await supabaseClient.auth.signUp({email,password});
-      if(error) throw error;
-      if(data.user){
-        const {error:profileError}=await supabaseClient.from('users').upsert({auth_user_id:data.user.id,email,username:uname,role:'customer'},{onConflict:'auth_user_id'});
-        if(profileError) throw profileError;
-      }
-      msg.style.color='#7cff9b';
-      msg.textContent=data.session?'Account created.':'Account created. Check your email to confirm, then login.';
-      if(data.session) setTimeout(()=>{window.location.href='dashboard.html';},700);
-    }else{
-      const {data,error}=await supabaseClient.auth.signInWithPassword({email,password});
-      if(error) throw error;
-      if(data.user) setTimeout(()=>{window.location.href='dashboard.html';},300);
-    }
-  }catch(err){msg.style.color='#ff7777';msg.textContent=err.message||'Something went wrong.';}
-  finally{submit.disabled=false;}
+  const register = mode === 'register';
+  authTitle.textContent = register ? 'CREATE ACCOUNT' : 'WELCOME BACK';
+  authSubmit.textContent = register ? 'CREATE ACCOUNT' : 'LOGIN';
+  loginTab.classList.toggle('active', !register);
+  registerTab.classList.toggle('active', register);
+  authUsername.style.display = register ? 'block' : 'none';
+  authUsername.required = register;
+  document.getElementById('authPassword').autocomplete =
+    register ? 'new-password' : 'current-password';
+
+  authSwitch.innerHTML = register
+    ? 'Already have an account? <button type="button">Login</button>'
+    : 'New here? <button type="button">Create an account</button>';
+
+  authSwitch.querySelector('button').onclick =
+    () => showAuth(register ? 'login' : 'register');
+}
+
+function closeAuth(){
+  authOverlay.classList.remove('show');
+  authForm.reset();
+  authMsg.textContent = '';
+}
+
+function openProfile(){
+  profileOverlay.classList.add('show');
+}
+function closeProfile(){
+  profileOverlay.classList.remove('show');
+}
+function scrollToTop(){
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+document.getElementById('enterPlatform').onclick = async () => {
+  const {data} = await supabaseClient.auth.getSession();
+  if(data.session) showStore(data.session.user);
+  else showAuth('login');
+};
+
+document.getElementById('authClose').onclick = closeAuth;
+loginTab.onclick = () => showAuth('login');
+registerTab.onclick = () => showAuth('register');
+
+authOverlay.addEventListener('click', e => {
+  if(e.target === authOverlay) closeAuth();
 });
 
-(async()=>{
-  const {data}=await supabaseClient.auth.getSession();
-  if(data.session) console.log('VIREXA X: authenticated');
-})();
-</script>
+document.getElementById('profileBtn').onclick = openProfile;
+document.getElementById('profileClose').onclick = closeProfile;
 
-</body>
-  </html>
+profileOverlay.addEventListener('click', e => {
+  if(e.target === profileOverlay) closeProfile();
+});
+
+document.getElementById('logoutBtn').onclick = async () => {
+  await supabaseClient.auth.signOut();
+  closeProfile();
+  showEntry();
+};
+
+authForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  authMsg.textContent = 'Processing...';
+  authSubmit.disabled = true;
+
+  const email = document.getElementById('authEmail').value.trim();
+  const password = document.getElementById('authPassword').value;
+
+  try{
+    if(authMode === 'register'){
+      const uname = authUsername.value.trim();
+
+      const {data,error} = await supabaseClient.auth.signUp({
+        email,
+        password,
+        options:{data:{username:uname, role:'customer'}}
+      });
+      if(error) throw error;
+
+      if(data.user){
+        const {error:profileError} = await supabaseClient
+          .from('users')
+          .upsert(
+            {auth_user_id:data.user
