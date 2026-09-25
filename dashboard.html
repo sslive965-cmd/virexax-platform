@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VIREXA X | Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:Orbitron,sans-serif}body{background:#050505;color:#fff;min-height:100vh}body:before{content:'';position:fixed;inset:0;z-index:-1;background:radial-gradient(circle at 20% 20%,rgba(255,0,0,.14),transparent 40%),radial-gradient(circle at 80% 30%,rgba(255,0,0,.12),transparent 40%)}header{padding:20px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(255,0,0,.3);backdrop-filter:blur(12px)}.logo{color:#f00;font-size:1.5rem;font-weight:800;text-shadow:0 0 18px #f00}.btn{border:1px solid #f00;background:#f00;color:#fff;padding:11px 18px;border-radius:30px;cursor:pointer;font-weight:700}.wrap{max-width:1100px;margin:auto;padding:35px 20px}.welcome{margin-bottom:25px}.welcome h1{font-size:clamp(1.5rem,5vw,2.5rem);color:#f00;text-shadow:0 0 15px #f00}.muted{color:#aaa;font-size:.85rem;margin-top:8px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px}.panel{background:rgba(255,255,255,.04);border:1px solid rgba(255,0,0,.35);border-radius:20px;padding:22px;backdrop-filter:blur(12px);min-height:150px}.panel h2{font-size:1rem;color:#f00;margin-bottom:15px}.panel p{color:#bbb;font-size:.82rem;line-height:1.7}.status{display:inline-block;padding:6px 10px;border:1px solid rgba(255,0,0,.5);border-radius:20px;color:#ff7777;font-size:.7rem;margin-top:12px}
+</style>
+</head>
+<body>
+<header><div class="logo">VIREXA X</div><button class="btn" id="logout">LOGOUT</button></header>
+<main class="wrap">
+<section class="welcome"><h1>Customer Dashboard</h1><p class="muted" id="account">Loading account...</p></section>
+<section class="grid">
+<div class="panel"><h2>PROFILE</h2><p id="profile">Loading profile...</p></div>
+<div class="panel"><h2>ORDERS</h2><p>Your orders will appear here after the store/order system is connected.</p><span class="status">READY</span></div>
+<div class="panel"><h2>PAYMENT HISTORY</h2><p>Your payment records will appear here after payment submission is connected.</p><span class="status">READY</span></div>
+<div class="panel"><h2>NOTIFICATIONS</h2><p>Order and payment notifications will appear here.</p><span class="status">READY</span></div>
+</section>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const supabaseClient=window.supabase.createClient('https://esefauysqukcnlmpexvp.supabase.co','sb_publishable_ojRLCERTzPJSTbBopO0KGA_CN6DDcA_');
+(async()=>{
+ const {data,error}=await supabaseClient.auth.getSession();
+ if(error||!data.session){window.location.href='index.html';return;}
+ const user=data.session.user;
+ document.getElementById('account').textContent=user.email||'Signed in';
+ const {data:profile}=await supabaseClient.from('users').select('username,email,role,telegram_username').eq('auth_user_id',user.id).maybeSingle();
+ if(profile){document.getElementById('profile').innerHTML=`Username: ${profile.username||'—'}<br>Email: ${profile.email||user.email||'—'}<br>Role: ${profile.role||'customer'}`;}
+ else{document.getElementById('profile').textContent='Profile record not found yet.';}
+})();
+document.getElementById('logout').onclick=async()=>{await supabaseClient.auth.signOut();window.location.href='index.html';};
+</script>
+</body>
+</html>
