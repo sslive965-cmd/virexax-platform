@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>VIREXA X — Admin</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:Arial,sans-serif}
+body{background:#050505;color:#fff;min-height:100vh}
+header{
+  padding:18px 20px;
+  border-bottom:1px solid rgba(0,220,255,.3);
+  display:flex;
+  justify-content:space-between;
+  align-items:center
+}
+.logo{color:#00e5ff;font-size:1.2rem;font-weight:800}
+.admin{color:#aaa;font-size:.75rem}
+main{max-width:900px;margin:auto;padding:25px 16px}
+h1{color:#00e5ff;font-size:1.5rem;margin-bottom:20px}
+.panel{
+  background:#0b1115;
+  border:1px solid rgba(0,220,255,.35);
+  border-radius:16px;
+  padding:20px;
+  margin-bottom:20px
+}
+.panel h2{font-size:1rem;color:#00e5ff;margin-bottom:16px}
+.form{display:grid;gap:10px}
+input,select{
+  width:100%;
+  padding:12px;
+  border-radius:9px;
+  border:1px solid #164653;
+  background:#05090c;
+  color:#fff
+}
+button{
+  padding:12px;
+  border:0;
+  border-radius:9px;
+  cursor:pointer;
+  font-weight:700
+}
+.primary{background:#00d9ff;color:#001014}
+.danger{background:#b51f2b;color:#fff}
+.msg{margin-top:12px;color:#aaa;font-size:.75rem}
+.product{
+  border:1px solid rgba(0,220,255,.2);
+  border-radius:12px;
+  padding:15px;
+  margin-top:12px
+}
+.product-title{
+  color:#00e5ff;
+  font-weight:700;
+  margin-bottom:8px
+}
+.row{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  padding:5px 0;
+  color:#aaa;
+  font-size:.75rem
+}
+.actions{display:flex;gap:8px;margin-top:10px}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="logo">VIREXA X</div>
+  <div class="admin">ADMIN PANEL</div>
+</header>
+
+<main>
+
+<h1>PRODUCT MANAGEMENT</h1>
+
+<div class="panel">
+<h2>ADD PRODUCT</h2>
+
+<form class="form" id="productForm">
+
+<input id="name" placeholder="Product name" required>
+
+<select id="status">
+  <option value="AVAILABLE">AVAILABLE</option>
+  <option value="HIDDEN">HIDDEN</option>
+</select>
+
+<input id="brand" placeholder="Card brand" value="VIREXA X">
+
+<input
+  id="cardNumber"
+  placeholder="Masked card number e.g. •••• •••• •••• 5467"
+>
+
+<input id="holder" placeholder="Card holder name">
+
+<input id="balance" type="number" min="0" placeholder="Balance">
+
+<input id="limit" type="number" min="0" placeholder="Limit">
+
+<input id="expiry" placeholder="Expiry e.g. 12/30">
+
+<input id="delivery" placeholder="Delivery" value="Digital">
+
+<input id="fee" type="number" min="0" placeholder="Entry fee">
+
+<input id="quantity" type="number" min="1" value="1" placeholder="Quantity">
+
+<button class="primary" type="submit">ADD PRODUCT</button>
+
+</form>
+
+<div class="msg" id="msg"></div>
+</div>
+
+<div class="panel">
+<h2>PRODUCTS</h2>
+<div id="products">Loading...</div>
+</div>
+
+</main>
+
+<script>
+'use strict';
+
+const SUPABASE_URL='https://esefauysqukcnlmpexvp.supabase.co';
+const SUPABASE_PUBLISHABLE_KEY='sb_publishable_ojRLCERTzPJSTbBopO0KGA_CN6DDcA_';
+
+const sb=window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_PUBLISHABLE_KEY
+);
+
+const form=document.getElementById('productForm');
+const msg=document.getElementById('msg');
+const products=document.getElementById('products');
+
+async function checkAdmin(){
+
+  const sessionResult=await sb.auth.getSession();
+  const session=sessionResult.data.session;
+
+  if(!session){
+    document.body.innerHTML=
+      '<div style="padding:40px;text-align:center">Please login first.</div>';
+    return false;
+  }
+
+  const result=await sb
+    .from('users')
+    .select('role')
+    .eq('auth_user_id',session.user.id)
+    .maybeSingle();
+
+  if(result.error || !result.data || result.data.role!=='admin'){
+    document.body.innerHTML=
+      '<div style="padding:40px;text-align:center">Admin access required.</div>';
+    return false;
+  }
+
+  return true;
+}
+
+async function loadProducts(){
+
+  const result=await sb
+    .from('products')
+    .select('*')
+    .order('created_at',{ascending:false});
+
+  if(result.error){
+    products.textContent=result.error.message;
+    return;
+  }
+
+  if(!result.data.length){
+    products.textContent='No products added yet.';
+    return;
+  }
+
+  products.innerHTML=result.data.map(p=>`
+    <div class="product">
+
+      <div class="product-title">
+        ${escapeHtml(p.name)}
+      </div>
+
+      <div class="row">
+        <span>Status</span>
+        <span>${escapeHtml(p.status || '')}</span>
+      </div>
+
+      <div class="row">
+        <span>Card</span>
+        <span>${escapeHtml(p.card_number || '-')}</span>
+      </div>
+
+      <div class="row">
+        <span>Holder</span>
+        <span>${escapeHtml(p.card_holder || '-')}</span>
+      </div>
+
+      <div class="row">
+        <span>Entry Fee</span>
+        <span>₹${Number(p.entry_fee || 0).toFixed(2)}</span>
+      </div>
+
+      <div class="row">
+        <span>Limit</span>
+        <span>₹${Number(p.card_limit || 0).toFixed(2)}</span>
+      </div>
+
+      <div class="row">
+        <span>Quantity</span>
+        <span>${Number(p.quantity || 0)}</span>
+      </div>
+
+      <div class="actions">
+        <button class="danger" onclick="deleteProduct(${p.id})">
+          DELETE
+        </button>
+      </div>
+
+    </div>
+  `).join('');
+}
+
+form.addEventListener('submit',async function(e){
+
+  e.preventDefault();
+
+  msg.textContent='Saving product...';
+
+  const product={
+    name:document.getElementById('name').value.trim(),
+    status:document.getElementById('status').value,
+    card_brand:document.getElementById('brand').value.trim(),
+
+    card_number:
+      document.getElementById('cardNumber').value.trim(),
+
+    card_holder:
+      document.getElementById('holder').value.trim(),
+
+    balance:
+      Number(document.getElementById('balance').value || 0),
+
+    card_limit:
+      Number(document.getElementById('limit').value || 0),
+
+    expiry:
+      document.getElementById('expiry').value.trim(),
+
+    delivery:
+      document.getElementById('delivery').value.trim(),
+
+    entry_fee:
+      Number(document.getElementById('fee').value || 0),
+
+    quantity:
+      Number(document.getElementById('quantity').value || 1)
+  };
+
+  const result=await sb
+    .from('products')
+    .insert(product);
+
+  if(result.error){
+    msg.textContent=result.error.message;
+    return;
+  }
+
+  msg.textContent='Product added successfully.';
+
+  form.reset();
+
+  document.getElementById('brand').value='VIREXA X';
+  document.getElementById('delivery').value='Digital';
+  document.getElementById('quantity').value='1';
+
+  loadProducts();
+});
+
+async function deleteProduct(id){
+
+  if(!confirm('Delete this product?')) return;
+
+  const result=await sb
+    .from('products')
+    .delete()
+    .eq('id',id);
+
+  if(result.error){
+    alert(result.error.message);
+    return;
+  }
+
+  loadProducts();
+}
+
+function escapeHtml(value){
+  return String(value ?? '')
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;')
+    .replace(/'/g,'&#039;');
+}
+
+(async function(){
+
+  const ok=await checkAdmin();
+
+  if(ok){
+    loadProducts();
+  }
+
+})();
+</script>
+
+</body>
+</html>
