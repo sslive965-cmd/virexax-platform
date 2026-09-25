@@ -242,7 +242,7 @@ footer{text-align:center;border-top:1px solid rgba(255,0,0,.2);padding:25px;colo
 
 const SUPABASE_URL='https://esefauysqukcnlmpexvp.supabase.co';
 const SUPABASE_PUBLISHABLE_KEY='sb_publishable_ojRLCERTzPJSTbBopO0KGA_CN6DDcA_';
-const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
+const sb=(window.supabase&&window.supabase.createClient)?window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY):null;
 
 const entry=document.getElementById('entry');
 const store=document.getElementById('store');
@@ -312,6 +312,7 @@ function returnToEntry(){
 
 enterBtn.addEventListener('click',async function(){
   try{
+    if(!sb){ openAuth('login'); return; }
     const result=await sb.auth.getSession();
     if(result.data && result.data.session){
       const sessionUser=result.data.session.user;
@@ -379,6 +380,4 @@ authForm.addEventListener('submit',async function(e){
       showStore(sessionUser,isAdmin);
     }
   }catch(err){
-    authMsg.style.color='#ff7777';
-    authMsg.textContent=err && err.message ? err.message : 'Something went wrong.';
-  }fin
+    authMsg.style.color='#ff77
