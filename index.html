@@ -116,7 +116,7 @@ footer{text-align:center;border-top:1px solid rgba(255,0,0,.2);padding:25px;colo
       <div class="point">SECURE</div>
       <div class="point">FAST SERVICE</div>
     </div>
-    <button type="button" class="btn primary" id="enterPlatform">ENTER PLATFORM</button>
+    <button type="button" class="btn primary" id="enterPlatform" onclick="document.getElementById('authOverlay').classList.add('active')">ENTER PLATFORM</button>
   </div>
 </section>
 
@@ -377,7 +377,4 @@ authForm.addEventListener('submit',async function(e){
       const roleRes=await sb.from('users').select('role').eq('auth_user_id',sessionUser.id).maybeSingle();
       const isAdmin=!roleRes.error && roleRes.data && roleRes.data.role==='admin';
       closeAuth();
-      showStore(sessionUser,isAdmin);
-    }
-  }catch(err){
-    authMsg.style.color='#ff77
+      showStore(
