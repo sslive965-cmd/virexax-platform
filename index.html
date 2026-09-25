@@ -368,7 +368,17 @@ enterBtn.addEventListener('click',async function(){
   try{
     const result=await sb.auth.getSession();
     if(result.data && result.data.session){
-      showStore(result.data.session.user);
+      const sessionUser=result.data.session.user;
+      const roleRes=await sb.from('users')
+        .select('role')
+        .eq('auth_user_id',sessionUser.id)
+        .maybeSingle();
+
+      if(!roleRes.error && roleRes.data && roleRes.data.role==='admin'){
+        window.location.href='admin.html';
+      }else{
+        showStore(sessionUser);
+      }
     }else{
       openAuth('login');
     }
@@ -423,8 +433,19 @@ authForm.addEventListener('submit',async function(e){
     }else{
       const res=await sb.auth.signInWithPassword({email:email,password:password});
       if(res.error) throw res.error;
+
+      const roleRes=await sb.from('users')
+        .select('role')
+        .eq('auth_user_id',res.data.user.id)
+        .maybeSingle();
+
       closeAuth();
-      showStore(res.data.user);
+
+      if(!roleRes.error && roleRes.data && roleRes.data.role==='admin'){
+        window.location.href='admin.html';
+      }else{
+        showStore(res.data.user);
+      }
     }
   }catch(err){
     authMsg.style.color='#ff7777';
@@ -450,4 +471,5 @@ document.getElementById('logoutBtn').addEventListener('click',async function(){
 })();
 </script>
 </body>
-</html>
+        </html>
+        
