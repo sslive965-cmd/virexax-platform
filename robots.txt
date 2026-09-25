@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://sslive965-cmd.github.io/virexax-platform/sitemap.xml
