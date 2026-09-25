@@ -65,6 +65,105 @@ footer{text-align:center;border-top:1px solid rgba(255,0,0,.2);padding:25px;colo
 .info-row span:last-child{color:#ddd;text-align:right;word-break:break-word}
 .logout{width:100%;margin-top:18px}
 @media(max-width:600px){header{padding:0 14px}nav{display:none}.store-main{padding:25px 14px}}
+/* VIREXA X PRODUCT CARD */
+.vx-product{
+  position:relative;
+  overflow:hidden;
+  border:1px solid rgba(0,220,255,.55);
+  background:linear-gradient(145deg,rgba(0,35,55,.9),rgba(3,8,18,.96));
+  border-radius:20px;
+  padding:18px;
+  box-shadow:0 0 25px rgba(0,200,255,.16),inset 0 0 30px rgba(0,200,255,.04);
+}
+
+.vx-product:before{
+  content:"";
+  position:absolute;
+  inset:-80px;
+  background:radial-gradient(circle,rgba(0,220,255,.16),transparent 55%);
+  pointer-events:none;
+}
+
+.vx-status{
+  position:relative;
+  display:inline-block;
+  padding:5px 10px;
+  border:1px solid #00e5ff;
+  border-radius:20px;
+  color:#00e5ff;
+  font-size:.58rem;
+  font-weight:700;
+  letter-spacing:1px;
+}
+
+.vx-card-visual{
+  position:relative;
+  height:175px;
+  margin:16px 0;
+  border-radius:15px;
+  padding:18px;
+  background:linear-gradient(135deg,#061b2c,#0089a8,#071321);
+  border:1px solid rgba(0,229,255,.7);
+  box-shadow:0 0 22px rgba(0,229,255,.25);
+}
+
+.vx-card-brand{
+  font-size:.75rem;
+  font-weight:800;
+  color:#fff;
+}
+
+.vx-card-number{
+  margin-top:48px;
+  font-size:.82rem;
+  letter-spacing:2px;
+  color:#dffaff;
+}
+
+.vx-card-bottom{
+  position:absolute;
+  left:18px;
+  right:18px;
+  bottom:15px;
+  display:flex;
+  justify-content:space-between;
+  color:#dffaff;
+  font-size:.55rem;
+}
+
+.vx-flip{
+  position:relative;
+  text-align:center;
+  color:#00e5ff;
+  font-size:.58rem;
+  letter-spacing:1px;
+  margin-bottom:14px;
+}
+
+.vx-details{
+  position:relative;
+  border-top:1px solid rgba(0,229,255,.18);
+}
+
+.vx-row{
+  display:flex;
+  justify-content:space-between;
+  padding:8px 0;
+  border-bottom:1px solid rgba(255,255,255,.07);
+  font-size:.58rem;
+}
+
+.vx-row span:first-child{color:#71808c}
+.vx-row span:last-child{color:#e8fbff}
+
+.vx-buy{
+  position:relative;
+  width:100%;
+  margin-top:14px;
+  background:linear-gradient(90deg,#008fa8,#00dfff);
+  color:#001018;
+  box-shadow:0 0 18px rgba(0,220,255,.28);
+}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
