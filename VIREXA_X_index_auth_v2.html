@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>VIREXA X | Premium Virtual Cards Platform</title>
+
+<meta name="description" content="VIREXA X - 24/7 Available, 100% Trusted Virtual Cards Platform. Secure Payments, Instant Delivery, Premium Digital Services.">
+
+<meta name="keywords" content="VIREXA X, Virtual Cards, Digital Payments, Visa Virtual Card, Mastercard Virtual Card">
+
+<meta name="robots" content="index, follow">
+
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Orbitron',sans-serif;
+}
+
+body{
+background:#050505;
+color:white;
+overflow-x:hidden;
+}
+
+body::before{
+content:'';
+position:fixed;
+width:100%;
+height:100%;
+background:
+radial-gradient(circle at 20% 20%, rgba(255,0,0,0.15), transparent 40%),
+radial-gradient(circle at 80% 30%, rgba(255,0,0,0.15), transparent 40%),
+radial-gradient(circle at 50% 80%, rgba(255,0,0,0.15), transparent 40%);
+z-index:-1;
+}
+
+header{
+padding:25px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+border-bottom:1px solid rgba(255,0,0,.3);
+backdrop-filter:blur(10px);
+}
+
+.logo{
+font-size:2rem;
+font-weight:800;
+color:#ff0000;
+text-shadow:0 0 20px #ff0000;
+}
+
+nav a{
+color:white;
+text-decoration:none;
+margin-left:20px;
+transition:.3s;
+}
+
+nav a:hover{
+color:#ff0000;
+}
+
+.hero{
+min-height:90vh;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+text-align:center;
+padding:30px;
+}
+
+.hero h1{
+font-size:4rem;
+color:#ff0000;
+text-shadow:
+0 0 10px #ff0000,
+0 0 20px #ff0000,
+0 0 40px #ff0000;
+}
+
+.hero h2{
+font-size:1.3rem;
+margin-top:15px;
+color:#ddd;
+}
+
+.badges{
+display:flex;
+flex-wrap:wrap;
+justify-content:center;
+gap:15px;
+margin-top:35px;
+}
+
+.badge{
+padding:12px 20px;
+border:1px solid #ff0000;
+border-radius:50px;
+background:rgba(255,0,0,.08);
+box-shadow:0 0 15px rgba(255,0,0,.3);
+}
+
+.buttons{
+margin-top:40px;
+display:flex;
+gap:20px;
+flex-wrap:wrap;
+justify-content:center;
+}
+
+.btn{
+padding:15px 35px;
+border:none;
+border-radius:50px;
+cursor:pointer;
+font-weight:bold;
+font-size:1rem;
+transition:.3s;
+}
+
+.primary{
+background:#ff0000;
+color:white;
+box-shadow:0 0 25px #ff0000;
+}
+
+.primary:hover{
+transform:translateY(-3px);
+}
+
+.secondary{
+background:transparent;
+border:2px solid #ff0000;
+color:white;
+}
+
+section{
+padding:80px 20px;
+}
+
+.title{
+text-align:center;
+font-size:2rem;
+margin-bottom:50px;
+color:#ff0000;
+text-shadow:0 0 15px #ff0000;
+}
+
+.cards{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+gap:25px;
+max-width:1200px;
+margin:auto;
+}
+
+.card{
+background:rgba(255,255,255,.04);
+border:1px solid rgba(255,0,0,.4);
+padding:25px;
+border-radius:20px;
+backdrop-filter:blur(15px);
+transition:.3s;
+}
+
+.card:hover{
+transform:translateY(-10px);
+box-shadow:0 0 25px rgba(255,0,0,.5);
+}
+
+.card h3{
+color:#ff0000;
+margin-bottom:15px;
+}
+
+.stats{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+gap:25px;
+max-width:1000px;
+margin:auto;
+}
+
+.stat{
+text-align:center;
+padding:25px;
+border-radius:20px;
+background:rgba(255,255,255,.04);
+border:1px solid rgba(255,0,0,.4);
+}
+
+.stat h2{
+font-size:2.5rem;
+color:#ff0000;
+}
+
+.trust{
+max-width:1000px;
+margin:auto;
+text-align:center;
+padding:50px;
+border-radius:25px;
+border:2px solid #ff0000;
+box-shadow:0 0 30px rgba(255,0,0,.5);
+}
+
+.trust h2{
+color:#ff0000;
+margin-bottom:20px;
+}
+
+.contact{
+text-align:center;
+}
+
+.contact a{
+display:inline-block;
+margin:10px;
+padding:15px 25px;
+border-radius:50px;
+background:#ff0000;
+color:white;
+text-decoration:none;
+}
+
+footer{
+padding:30px;
+text-align:center;
+border-top:1px solid rgba(255,0,0,.3);
+margin-top:50px;
+}
+
+
+/* VIREXA X AUTH MODAL */
+.auth-overlay{position:fixed;inset:0;background:rgba(0,0,0,.82);backdrop-filter:blur(12px);display:none;align-items:center;justify-content:center;z-index:9999;padding:20px;}
+.auth-overlay.active{display:flex;}
+.auth-box{width:min(420px,100%);background:rgba(15,15,15,.96);border:1px solid rgba(255,0,0,.65);border-radius:24px;padding:28px;box-shadow:0 0 40px rgba(255,0,0,.35);position:relative;}
+.auth-box h2{color:#ff0000;text-align:center;margin-bottom:8px;text-shadow:0 0 15px #ff0000;}
+.auth-sub{text-align:center;color:#aaa;font-size:.8rem;margin-bottom:22px;}
+.auth-tabs{display:flex;gap:8px;margin-bottom:18px;}
+.auth-tab{flex:1;padding:11px;border:1px solid rgba(255,0,0,.4);background:transparent;color:#aaa;border-radius:12px;cursor:pointer;}
+.auth-tab.active{background:#ff0000;color:#fff;box-shadow:0 0 18px rgba(255,0,0,.4);}
+.auth-form{display:flex;flex-direction:column;gap:12px;}
+.auth-form input{width:100%;padding:14px 15px;border-radius:12px;border:1px solid rgba(255,0,0,.35);background:#090909;color:#fff;outline:none;}
+.auth-form input:focus{border-color:#ff0000;box-shadow:0 0 12px rgba(255,0,0,.2);}
+.auth-submit{width:100%;margin-top:4px;}
+.auth-close{position:absolute;right:16px;top:12px;background:none;border:0;color:#aaa;font-size:28px;cursor:pointer;}
+.auth-msg{text-align:center;min-height:20px;font-size:.8rem;color:#ff7777;margin-top:8px;}
+.auth-switch{text-align:center;color:#aaa;font-size:.75rem;margin-top:14px;}
+.auth-switch button{background:none;border:0;color:#ff0000;cursor:pointer;}
+.dashboard-btn{display:none;}
+@media(max-width:600px){.auth-box{padding:22px;}.hero h1{font-size:2.7rem;}nav{display:none;}}
+
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+
+<body>
+
+<header>
+<div class="logo">VIREXA X</div>
+
+<nav>
+<a href="#cards">Cards</a>
+<a href="#trust">Trust</a>
+<a href="#contact">Contact</a>
+</nav>
+</header>
+
+<section class="hero">
+
+<h1>VIREXA X</h1>
+
+<h2>Premium Virtual Cards Platform</h2>
+
+<div class="badges">
+<div class="badge">24/7 Available</div>
+<div class="badge">100% Trusted Store</div>
+<div class="badge">Secure Payments</div>
+<div class="badge">Instant Delivery</div>
+</div>
+
+<div class="buttons">
+<button class="btn primary">BUY NOW</button>
+<a class="btn secondary" href="https://t.me/AURA_JINWOO_S1" target="_blank" rel="noopener">CONTACT US</a>
+</div>
+
+</section>
+
+<section id="cards">
+
+<h2 class="title">Virtual Cards</h2>
+
+<div class="cards">
+
+<div class="card">
+<h3>Visa Virtual Card</h3>
+<p>Secure online payments with global support.</p>
+</div>
+
+<div class="card">
+<h3>Mastercard Virtual Card</h3>
+<p>Fast transactions and premium features.</p>
+</div>
+
+<div class="card">
+<h3>International Virtual Card</h3>
+<p>Worldwide payment compatibility.</p>
+</div>
+
+<div class="card">
+<h3>Digital Payment Card</h3>
+<p>Reliable virtual card for online services.</p>
+</div>
+
+</div>
+
+</section>
+
+<section>
+
+<h2 class="title">Why Choose Us</h2>
+
+<div class="stats">
+
+<div class="stat">
+<h2>24/7</h2>
+<p>Support</p>
+</div>
+
+<div class="stat">
+<h2>100%</h2>
+<p>Trusted Store</p>
+</div>
+
+<div class="stat">
+<h2>Fast</h2>
+<p>Delivery</p>
+</div>
+
+<div class="stat">
+<h2>Secure</h2>
+<p>Payments</p>
+</div>
+
+</div>
+
+</section>
+
+<section id="trust">
+
+<div class="trust">
+
+<h2>VERIFIED STORE</h2>
+
+<p>
+VIREXA X provides premium virtual card solutions with secure payment methods,
+trusted customer support and fast delivery services.
+</p>
+
+</div>
+
+</section>
+
+<section id="contact" class="contact">
+
+<h2 class="title">Contact Us</h2>
+
+<a href="https://t.me/AURA_JINWOO_S1" target="_blank" rel="noopener">Telegram</a>
+
+</section>
+
+<footer>
+
+<h3>VIREXA X</h3>
+
+<p>Premium Virtual Cards Platform</p>
+
+<p>© 2026 VIREXA X</p>
+
+</footer>
+
+
+<div class="auth-overlay" id="authOverlay">
+  <div class="auth-box">
+    <button class="auth-close" id="authClose" aria-label="Close">&times;</button>
+    <h2 id="authTitle">WELCOME BACK</h2>
+    <div class="auth-sub">Access your VIREXA X customer account</div>
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="loginTab">LOGIN</button>
+      <button class="auth-tab" id="registerTab">REGISTER</button>
+    </div>
+    <form class="auth-form" id="authForm">
+      <input id="authEmail" type="email" placeholder="Email address" autocomplete="email" required>
+      <input id="authPassword" type="password" placeholder="Password" autocomplete="current-password" minlength="6" required>
+      <input id="authUsername" type="text" placeholder="Username" autocomplete="username" style="display:none">
+      <button class="btn primary auth-submit" type="submit" id="authSubmit">LOGIN</button>
+    </form>
+    <div class="auth-msg" id="authMsg"></div>
+    <div class="auth-switch" id="authSwitch">New here? <button type="button">Create an account</button></div>
+  </div>
+</div>
+
+<script>
+const SUPABASE_URL = 'https://esefauysqukcnlmpexvp.supabase.co';
+const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_ojRLCERTzPJSTbBopO0KGA_CN6DDcA_';
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+
+const overlay=document.getElementById('authOverlay');
+const form=document.getElementById('authForm');
+const loginTab=document.getElementById('loginTab');
+const registerTab=document.getElementById('registerTab');
+const title=document.getElementById('authTitle');
+const submit=document.getElementById('authSubmit');
+const username=document.getElementById('authUsername');
+const msg=document.getElementById('authMsg');
+const switchBox=document.getElementById('authSwitch');
+let authMode='login';
+
+function showAuth(mode='login'){
+  authMode=mode; overlay.classList.add('active'); msg.textContent='';
+  const register=mode==='register';
+  title.textContent=register?'CREATE ACCOUNT':'WELCOME BACK';
+  submit.textContent=register?'CREATE ACCOUNT':'LOGIN';
+  loginTab.classList.toggle('active',!register); registerTab.classList.toggle('active',register);
+  username.style.display=register?'block':'none'; username.required=register;
+  document.getElementById('authPassword').autocomplete=register?'new-password':'current-password';
+  switchBox.innerHTML=register?'Already have an account? <button type="button">Login</button>':'New here? <button type="button">Create an account</button>';
+  switchBox.querySelector('button').onclick=()=>showAuth(register?'login':'register');
+}
+
+function closeAuth(){overlay.classList.remove('active');form.reset();}
+
+document.querySelector('.primary').addEventListener('click',()=>showAuth('login'));
+document.getElementById('authClose').addEventListener('click',closeAuth);
+overlay.addEventListener('click',e=>{if(e.target===overlay)closeAuth();});
+loginTab.onclick=()=>showAuth('login'); registerTab.onclick=()=>showAuth('register');
+
+form.addEventListener('submit',async e=>{
+  e.preventDefault(); msg.textContent='Processing...'; submit.disabled=true;
+  const email=document.getElementById('authEmail').value.trim();
+  const password=document.getElementById('authPassword').value;
+  try{
+    if(authMode==='register'){
+      const uname=username.value.trim();
+      const {data,error}=await supabaseClient.auth.signUp({email,password});
+      if(error) throw error;
+      if(data.user){
+        const {error:profileError}=await supabaseClient.from('users').upsert({auth_user_id:data.user.id,email,username:uname,role:'customer'},{onConflict:'auth_user_id'});
+        if(profileError) throw profileError;
+      }
+      msg.style.color='#7cff9b';
+      msg.textContent=data.session?'Account created.':'Account created. Check your email to confirm, then login.';
+      if(data.session) setTimeout(()=>{window.location.href='dashboard.html';},700);
+    }else{
+      const {data,error}=await supabaseClient.auth.signInWithPassword({email,password});
+      if(error) throw error;
+      if(data.user) setTimeout(()=>{window.location.href='dashboard.html';},300);
+    }
+  }catch(err){msg.style.color='#ff7777';msg.textContent=err.message||'Something went wrong.';}
+  finally{submit.disabled=false;}
+});
+
+(async()=>{
+  const {data}=await supabaseClient.auth.getSession();
+  if(data.session) console.log('VIREXA X: authenticated');
+})();
+</script>
+
+</body>
+  </html>
