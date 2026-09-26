@@ -2,63 +2,125 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>VIREXA X | Dashboard</title>
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-*{box-sizing:border-box;margin:0;padding:0;font-family:Orbitron,sans-serif}body{background:#050505;color:#fff;min-height:100vh}body:before{content:'';position:fixed;inset:0;z-index:-1;background:radial-gradient(circle at 20% 20%,rgba(255,0,0,.14),transparent 40%),radial-gradient(circle at 80% 30%,rgba(255,0,0,.12),transparent 40%)}header{padding:20px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(255,0,0,.3);backdrop-filter:blur(12px)}.logo{color:#f00;font-size:1.5rem;font-weight:800;text-shadow:0 0 18px #f00}.btn{border:1px solid #f00;background:#f00;color:#fff;padding:11px 18px;border-radius:30px;cursor:pointer;font-weight:700}.wrap{max-width:1100px;margin:auto;padding:35px 20px}.welcome{margin-bottom:25px}.welcome h1{font-size:clamp(1.5rem,5vw,2.5rem);color:#f00;text-shadow:0 0 15px #f00}.muted{color:#aaa;font-size:.85rem;margin-top:8px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px}.panel{background:rgba(255,255,255,.04);border:1px solid rgba(255,0,0,.35);border-radius:20px;padding:22px;backdrop-filter:blur(12px);min-height:150px}.panel h2{font-size:1rem;color:#f00;margin-bottom:15px}.panel p{color:#bbb;font-size:.82rem;line-height:1.7}.status{display:inline-block;padding:6px 10px;border:1px solid rgba(255,0,0,.5);border-radius:20px;color:#ff7777;font-size:.7rem;margin-top:12px}
+*{box-sizing:border-box;margin:0;padding:0;font-family:Orbitron,sans-serif}
+:root{--red:#ff1111;--red2:#ff4a4a;--bg:#030303;--panel:rgba(12,12,12,.88);--muted:#9a9a9a}
+body{background:var(--bg);color:#fff;min-height:100vh;overflow-x:hidden}
+body:before{content:"";position:fixed;inset:0;z-index:-2;background:radial-gradient(circle at 20% 15%,rgba(255,0,0,.16),transparent 32%),radial-gradient(circle at 85% 25%,rgba(255,0,0,.11),transparent 30%),linear-gradient(135deg,#020202,#090909 50%,#020202)}
+body:after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:repeating-linear-gradient(0deg,transparent 0 3px,rgba(255,0,0,.018) 4px),linear-gradient(90deg,transparent 49.8%,rgba(255,0,0,.025) 50%,transparent 50.2%)}
+button,input{font:inherit}.app{display:flex;min-height:100vh}
+.sidebar{width:225px;border-right:1px solid rgba(255,0,0,.42);background:rgba(0,0,0,.78);padding:22px 14px;position:sticky;top:0;height:100vh}
+.logo{font-size:1.65rem;font-weight:800;color:#f11;text-shadow:0 0 18px #f00;padding:5px 10px 28px}
+.nav{display:grid;gap:10px}.nav button{width:100%;border:1px solid transparent;background:transparent;color:#cfcfcf;text-align:left;padding:13px 14px;border-radius:12px;cursor:pointer;transition:.2s}.nav button:hover,.nav button.active{color:#fff;border-color:#f11;background:rgba(255,0,0,.09);box-shadow:0 0 16px rgba(255,0,0,.18)}
+.nav b{color:#f11;margin-right:9px}.sidefoot{position:absolute;bottom:25px;left:20px;right:20px;text-align:center;color:#f11;font-size:.58rem;line-height:1.8}
+.main{flex:1;min-width:0}.topbar{height:76px;border-bottom:1px solid rgba(255,0,0,.28);display:flex;justify-content:flex-end;align-items:center;gap:12px;padding:12px 24px;background:rgba(0,0,0,.48);backdrop-filter:blur(12px)}
+.userbox{border:1px solid #f11;border-radius:30px;padding:10px 15px;color:#eee;display:flex;align-items:center;gap:9px}.avatar{width:25px;height:25px;border:1px solid #f11;border-radius:50%;display:grid;place-items:center;color:#f11}.logout{border:1px solid #f11;background:transparent;color:#f33;border-radius:24px;padding:11px 17px;cursor:pointer}.logout:hover{background:#f11;color:#fff}
+.wrap{max-width:1160px;margin:auto;padding:30px 22px 45px}.hero{display:flex;justify-content:space-between;gap:20px;align-items:flex-start;margin-bottom:25px}.hero h1{font-size:clamp(1.8rem,4vw,2.8rem);color:#f11;text-shadow:0 0 17px #f00}.hero p{color:#aaa;font-size:.78rem;margin-top:8px}.hero strong{color:#f33}.last{min-width:220px;border:1px solid #f11;border-radius:16px;padding:15px;background:rgba(255,0,0,.035)}.last small{color:#aaa}.last div{margin-top:7px;font-size:.72rem}.online{color:#0f6;margin-top:8px}
+.panel{border:1px solid rgba(255,0,0,.55);border-radius:18px;background:var(--panel);box-shadow:0 0 25px rgba(255,0,0,.07);padding:20px;margin-bottom:20px}.paneltitle{color:#f22;font-size:.92rem;border-bottom:1px solid rgba(255,0,0,.25);padding-bottom:12px;margin-bottom:16px}
+.profile{display:grid;grid-template-columns:1.2fr 1fr;gap:18px}.profileinfo{display:flex;gap:18px;align-items:center}.bigavatar{width:90px;height:90px;border:2px solid #f11;border-radius:50%;display:grid;place-items:center;color:#f11;font-size:2rem;box-shadow:0 0 20px rgba(255,0,0,.25)}.profileinfo p{color:#999;font-size:.68rem;margin:7px 0}.profileinfo strong{color:#eee;font-size:.85rem}.role{display:inline-block;border:1px solid #f11;color:#f33;border-radius:8px;padding:5px 8px;font-size:.58rem}.edit{border:1px solid rgba(255,0,0,.45);border-radius:15px;padding:16px}.edit label{display:block;color:#f33;font-size:.68rem;margin-bottom:8px}.editrow{display:flex;gap:8px}.edit input{flex:1;min-width:0;background:#050505;border:1px solid #777;border-radius:10px;padding:12px;color:#fff;outline:none}.edit input:focus{border-color:#f11}.save{border:1px solid #f11;background:#f11;color:#fff;border-radius:10px;padding:0 17px;cursor:pointer}.msg{color:#888;font-size:.62rem;margin-top:8px;min-height:12px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:15px}.stat{border:1px solid rgba(255,0,0,.55);border-radius:15px;padding:17px;background:rgba(255,0,0,.025)}.stat span{color:#aaa;font-size:.6rem}.stat strong{display:block;color:#f33;font-size:1.35rem;margin:9px 0 3px}.stat small{color:#777;font-size:.55rem}
+.features{display:grid;grid-template-columns:repeat(4,1fr);gap:15px}.feature{border:1px solid rgba(255,0,0,.55);border-radius:15px;padding:18px;min-height:185px;display:flex;flex-direction:column}.feature h3{color:#f33;font-size:.78rem;margin-bottom:13px}.feature p{color:#aaa;font-size:.63rem;line-height:1.7;flex:1}.feature button{border:1px solid #f11;background:transparent;color:#f33;border-radius:18px;padding:9px;cursor:pointer;font-size:.6rem}.feature button:hover{background:#f11;color:#fff}
+.activity{width:100%;border-collapse:collapse;font-size:.62rem}.activity th,.activity td{padding:12px 9px;text-align:left;border-bottom:1px solid rgba(255,0,0,.16)}.activity th{color:#f33}.activity td{color:#aaa}.badge{border:1px solid #0a5;color:#0f6;border-radius:10px;padding:4px 7px;font-size:.5rem}.pending{border-color:#a77a00;color:#d8a900}
+@media(max-width:900px){.sidebar{width:78px;padding:15px 9px}.logo{font-size:0;text-align:center}.logo:after{content:"X";font-size:1.5rem;color:#f11}.nav button{font-size:0;text-align:center}.nav b{font-size:1rem;margin:0}.sidefoot{display:none}.stats,.features{grid-template-columns:repeat(2,1fr)}.profile{grid-template-columns:1fr}}
+@media(max-width:600px){.topbar{padding:10px 12px}.userbox{max-width:150px;overflow:hidden}.wrap{padding:22px 12px}.hero{flex-direction:column}.last{width:100%}.stats,.features{grid-template-columns:1fr}.activity{min-width:650px}.panel.tablepanel{overflow:auto}.profileinfo{align-items:flex-start}.bigavatar{width:65px;height:65px;font-size:1.4rem}.editrow{flex-direction:column}.save{padding:11px}}
 </style>
 </head>
 <body>
-<header><div class="logo">VIREXA X</div><button class="btn" id="logout">LOGOUT</button></header>
+<div class="app">
+<aside class="sidebar">
+  <div class="logo">VIREXA X</div>
+  <nav class="nav">
+    <button class="active"><b>◉</b>DASHBOARD</button>
+    <button><b>▣</b>CARDS</button>
+    <button><b>◈</b>ORDERS</button>
+    <button><b>▤</b>PAYMENT HISTORY</button>
+    <button><b>↻</b>REFUND REQUEST</button>
+    <button><b>♧</b>NOTIFICATIONS</button>
+    <button><b>◎</b>PROFILE</button>
+  </nav>
+  <div class="sidefoot">SECURE • FAST • GLOBAL<br>VIREXA X</div>
+</aside>
+<section class="main">
+<header class="topbar">
+  <div class="userbox"><span class="avatar">●</span><span id="topUser">ACCOUNT</span></div>
+  <button class="logout" id="logout">⇥ LOGOUT</button>
+</header>
 <main class="wrap">
-<section class="welcome"><h1>DASHBOARD</h1><p class="muted" id="account">Loading account...</p></section>
-<section class="grid">
-<div class="panel">
-<h2>PROFILE</h2>
-<p id="profile">Loading profile...</p>
-<div style="margin-top:16px">
-<label style="display:block;color:#aaa;font-size:.7rem;margin-bottom:7px">USERNAME</label>
-<div style="display:flex;gap:8px;flex-wrap:wrap">
-<input id="usernameInput" type="text" placeholder="Enter username" maxlength="40" style="flex:1;min-width:160px;background:#090909;border:1px solid rgba(255,0,0,.45);color:#fff;padding:10px 12px;border-radius:10px;outline:none">
-<button class="btn" id="saveUsername" type="button">SAVE</button>
-</div>
-<p id="usernameMsg" class="muted"></p>
-</div>
-</div>
-<div class="panel"><h2>ORDERS</h2><p>Your orders will appear here after the store/order system is connected.</p><span class="status">READY</span></div>
-<div class="panel"><h2>PAYMENT HISTORY</h2><p>Your payment records will appear here after payment submission is connected.</p><span class="status">READY</span></div>
-<div class="panel"><h2>NOTIFICATIONS</h2><p>Order and payment notifications will appear here.</p><span class="status">READY</span></div>
-<div class="panel"><h2>REFUND REQUEST</h2><p>Submit and track refund requests from your orders. Admin review and processing will be connected separately.</p><span class="status">READY</span></div>
+<section class="hero">
+  <div><h1>DASHBOARD</h1><p>Welcome back, <strong id="welcomeUser">USER</strong><br>Manage your account, cards and transactions from here.</p></div>
+  <div class="last"><small>Last Login</small><div id="loginTime">Current session</div><div class="online">● Online</div></div>
+</section>
+
+<section class="panel">
+  <div class="paneltitle">◉ YOUR PROFILE</div>
+  <div class="profile">
+    <div class="profileinfo"><div class="bigavatar">●</div><div><p>Username</p><strong id="profileUsername">Loading...</strong><p>Email</p><strong id="profileEmail">Loading...</strong><p>Role</p><span class="role" id="profileRole">CUSTOMER</span></div></div>
+    <div class="edit"><label>UPDATE USERNAME</label><div class="editrow"><input id="usernameInput" maxlength="40" placeholder="Username"><button class="save" id="saveUsername">SAVE</button></div><div class="msg" id="saveMsg"></div></div>
+  </div>
+</section>
+
+<section class="stats">
+  <div class="stat"><span>TOTAL CARDS</span><strong>0</strong><small>Active cards</small></div>
+  <div class="stat"><span>TOTAL ORDERS</span><strong>0</strong><small>Completed orders</small></div>
+  <div class="stat"><span>TOTAL SPENT</span><strong>$0.00</strong><small>Lifetime spend</small></div>
+  <div class="stat"><span>PENDING REFUNDS</span><strong>0</strong><small>Refund requests</small></div>
+</section>
+
+<section class="features" style="margin-top:20px">
+  <div class="feature"><h3>◉ MY CARDS</h3><p>View and manage your virtual cards. Tap a card to flip and see card details.</p><button>VIEW CARDS →</button></div>
+  <div class="feature"><h3>◈ ORDERS</h3><p>Check your order history and current order status.</p><button>VIEW ORDERS →</button></div>
+  <div class="feature"><h3>▤ PAYMENT HISTORY</h3><p>View your transaction and payment history.</p><button>VIEW HISTORY →</button></div>
+  <div class="feature"><h3>↻ REFUND REQUEST</h3><p>Submit a refund request for an eligible order and track its status.</p><button>REQUEST REFUND →</button></div>
+</section>
+
+<section class="panel tablepanel" style="margin-top:20px">
+  <div class="paneltitle">◷ RECENT ACTIVITY</div>
+  <table class="activity"><thead><tr><th>DATE & TIME</th><th>ACTION</th><th>DETAILS</th><th>STATUS</th></tr></thead>
+  <tbody><tr><td id="activityTime">Current session</td><td>Login</td><td id="activityEmail">—</td><td><span class="badge">● SUCCESS</span></td></tr>
+  <tr><td>—</td><td>Order</td><td>No orders yet</td><td><span class="badge pending">● PENDING</span></td></tr>
+  <tr><td>—</td><td>Refund Request</td><td>No refund requests yet</td><td><span class="badge pending">● PENDING</span></td></tr></tbody></table>
 </section>
 </main>
+</section>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 const supabaseClient=window.supabase.createClient('https://esefauysqukcnlmpexvp.supabase.co','sb_publishable_ojRLCERTzPJSTbBopO0KGA_CN6DDcA_');
+let currentUser=null;
 (async()=>{
- const {data,error}=await supabaseClient.auth.getSession();
- if(error||!data.session){window.location.href='index.html';return;}
- const user=data.session.user;
- document.getElementById('account').textContent=user.email||'Signed in';
- const {data:profile}=await supabaseClient.from('users').select('username,email,role,telegram_username').eq('auth_user_id',user.id).maybeSingle();
- if(profile){
-  document.getElementById('profile').innerHTML=`Username: ${profile.username||'—'}<br>Email: ${profile.email||user.email||'—'}<br>Role: ${profile.role||'customer'}`;
-  document.getElementById('usernameInput').value=profile.username||'';
- } else {
-  document.getElementById('profile').textContent='Profile record not found yet.';
- }
- document.getElementById('saveUsername').onclick=async()=>{
-  const input=document.getElementById('usernameInput');
-  const msg=document.getElementById('usernameMsg');
-  const username=input.value.trim();
-  if(!username){msg.textContent='Enter a username.';return;}
-  msg.textContent='Saving...';
-  const {error:updateError}=await supabaseClient.from('users').update({username}).eq('auth_user_id',user.id);
-  if(updateError){msg.textContent='Could not save username.';return;}
-  msg.textContent='Username saved.';
-  document.getElementById('profile').innerHTML=`Username: ${username}<br>Email: ${profile?.email||user.email||'—'}<br>Role: ${profile?.role||'customer'}`;
- }; 
+  const {data,error}=await supabaseClient.auth.getSession();
+  if(error||!data.session){window.location.href='index.html';return;}
+  currentUser=data.session.user;
+  const now=new Date().toLocaleString();
+  document.getElementById('loginTime').textContent=now;
+  document.getElementById('activityTime').textContent=now;
+  document.getElementById('activityEmail').textContent=currentUser.email||'Signed in';
+  document.getElementById('profileEmail').textContent=currentUser.email||'—';
+  const {data:profile}=await supabaseClient.from('users').select('username,email,role').eq('auth_user_id',currentUser.id).maybeSingle();
+  const username=profile?.username||currentUser.email?.split('@')[0]||'USER';
+  document.getElementById('topUser').textContent=username;
+  document.getElementById('welcomeUser').textContent=username;
+  document.getElementById('profileUsername').textContent=username;
+  document.getElementById('usernameInput').value=username;
+  document.getElementById('profileRole').textContent=(profile?.role||'customer').toUpperCase();
 })();
+document.getElementById('saveUsername').onclick=async()=>{
+  if(!currentUser)return;
+  const value=document.getElementById('usernameInput').value.trim();
+  const msg=document.getElementById('saveMsg');
+  if(!value){msg.textContent='Enter a username.';return;}
+  msg.textContent='Saving...';
+  const {error}=await supabaseClient.from('users').update({username:value}).eq('auth_user_id',currentUser.id);
+  if(error){msg.textContent='Could not update username.';return;}
+  document.getElementById('topUser').textContent=value;
+  document.getElementById('welcomeUser').textContent=value;
+  document.getElementById('profileUsername').textContent=value;
+  msg.textContent='Username updated.';
+};
 document.getElementById('logout').onclick=async()=>{await supabaseClient.auth.signOut();window.location.href='index.html';};
 </script>
 </body>
