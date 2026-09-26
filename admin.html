@@ -35,8 +35,8 @@ button{padding:11px 13px;border:0;border-radius:9px;cursor:pointer;font-weight:7
 .form-actions button{flex:1}
 .badge{display:inline-block;padding:4px 8px;border:1px solid rgba(255,0,0,.45);border-radius:20px;color:#ff6666;font-size:.6rem;margin-bottom:9px}
 .small{font-size:.65rem;color:#777;margin-bottom:10px}
-.exit{width:34px;height:34px;padding:0;border-radius:8px;background:#090909;color:#aaa;border:1px solid rgba(255,0,0,.35);font-size:24px;line-height:1;font-weight:400;display:flex;align-items:center;justify-content:center;box-shadow:none}
-.exit:hover{color:#fff;border-color:#f00}
+.exit{width:36px;height:36px;padding:0;border:0;background:transparent;color:#aaa;font-size:32px;line-height:1;font-weight:400;display:flex;align-items:center;justify-content:center;box-shadow:none}
+.exit:hover{color:#fff}
 @media(max-width:600px){.row{align-items:flex-start}.row span:first-child{min-width:92px}.actions{flex-direction:column}}
 </style>
 </head>
@@ -47,7 +47,7 @@ button{padding:11px 13px;border:0;border-radius:9px;cursor:pointer;font-weight:7
     <div class="logo">VIREXA X</div>
     <div class="admin">ADMIN PANEL</div>
   </div>
-  <button class="exit" type="button" aria-label="Back to Store" title="Back to Store" onclick="window.location.href='index.html'">×</button>
+  <button class="exit" type="button" aria-label="Back to Store" title="Back to Store" onclick="goBackToStore()">×</button>
 </header>
 
 <main>
@@ -96,6 +96,15 @@ button{padding:11px 13px;border:0;border-radius:9px;cursor:pointer;font-weight:7
 
 <script>
 'use strict';
+
+function goBackToStore(){
+  if(window.history.length > 1){
+    window.history.back();
+  }else{
+    window.location.href='index.html';
+  }
+}
+
 
 const SUPABASE_URL='https://esefauysqukcnlmpexvp.supabase.co';
 const SUPABASE_PUBLISHABLE_KEY='sb_publishable_ojRLCERTzPJSTbBopO0KGA_CN6DDcA_';
