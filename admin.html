@@ -79,7 +79,18 @@ button{padding:11px 13px;border:0;border-radius:9px;cursor:pointer;font-weight:7
     <input id="delivery" placeholder="Delivery" value="Digital">
     <input id="fee" type="number" min="0" placeholder="Entry fee">
     <input id="quantity" type="number" min="1" value="1" placeholder="Stock/Quantity">
+<div class="panel" style="margin-top:10px;padding:12px">
+  <h2 style="margin-bottom:10px">CUSTOM FIELDS</h2>
 
+  <div id="customFields"></div>
+
+  <button
+    type="button"
+    class="secondary"
+    onclick="addCustomField()">
+    + ADD FIELD
+  </button>
+</div>
     <div class="form-actions">
       <button class="primary" id="saveBtn" type="submit">ADD PRODUCT</button>
       <button class="secondary" id="cancelBtn" type="button" style="display:none">CANCEL EDIT</button>
@@ -106,6 +117,41 @@ function goBackToStore(){
 }
 
 
+  function addCustomField(fieldName='', fieldValue=''){
+  const wrap=document.createElement('div');
+
+  wrap.className='custom-field';
+  wrap.style.marginBottom='10px';
+
+  wrap.innerHTML=`
+    <input class="meta-name" placeholder="Field Name" value="${escapeHtml(fieldName)}">
+    <input class="meta-value" placeholder="Value" value="${escapeHtml(fieldValue)}">
+    <button
+      type="button"
+      class="danger"
+      onclick="this.parentElement.remove()">
+      Remove
+    </button>
+  `;
+
+  document.getElementById('customFields').appendChild(wrap);
+}
+
+function collectMetadata(){
+  const metadata={};
+
+  document.querySelectorAll('#customFields .custom-field')
+    .forEach(row=>{
+      const name=row.querySelector('.meta-name').value.trim();
+      const value=row.querySelector('.meta-value').value.trim();
+
+      if(name){
+        metadata[name]=value;
+      }
+    });
+
+  return metadata;
+}
 const SUPABASE_URL='https://esefauysqukcnlmpexvp.supabase.co';
 const SUPABASE_PUBLISHABLE_KEY='sb_publishable_ojRLCERTzPJSTbBopO0KGA_CN6DDcA_';
 const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
@@ -150,7 +196,8 @@ function productFromForm(){
     expiry:val('expiry'),
     delivery:val('delivery'),
     entry_fee:num('fee'),
-    quantity:num('quantity',1)
+    quantity:num('quantity',1),
+metadata:collectMetadata()
   };
 }
 
