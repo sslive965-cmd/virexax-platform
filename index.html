@@ -334,56 +334,183 @@ registerTab.addEventListener('click',function(){openAuth('register');});
 
 authForm.addEventListener('submit',async function(e){
   e.preventDefault();
+
   authSubmit.disabled=true;
+  authMsg.style.color='#ff7777';
   authMsg.textContent='Processing...';
+
   try{
     const email=authEmail.value.trim();
     const password=authPassword.value;
 
-    if(mode==='register'){
-      const uname=authUsername.value.trim();
-      const res=await sb.auth.signUp({
-        email:email,
-        password:password,
-        options:{data:{username:uname,role:'customer'}}
-      });
-      if(res.error) throw res.error;
+    if(!sb){
+      throw new Error('Supabase connection is not available.');
+    }
 
-      if(res.data && res.data.user){
-        const profile=await sb.from('users').upsert({
-          auth_user_id:res.data.user.id,
-          email:email,
-          username:uname,
-          role:'customer'
-        },{onConflict:'auth_user_id'});
-        if(profile.error) throw profile.error;
+    /* REGISTER */
+    if(mode==='register'){
+      const username=authUsername.value.trim();
+
+      if(!username){
+        throw new Error('Please enter a username.');
       }
 
-      if(res.data && res.data.session){
+      const res=await sb.auth.signUp({
+        email,
+        password,
+        options:{
+          data:{
+            username,
+            role:'customer'
+          }
+        }
+      });
+
+      if(res.error) throw res.error;
+
+      const user=res.data?.user;
+
+      if(!user){
+        throw new Error('Account could not be created.');
+      }
+
+      /*
+       * Create the public profile.
+       * INSERT is used instead of UPSERT so an existing
+       * admin/customer role cannot accidentally be overwritten.
+       */
+      const profile=await sb.from('users').insert({
+        auth_user_id:user.id,
+        email:user.email,
+        username:username,
+        role:'customer',
+        last_login_at:new Date().toISOString(),
+        last_seen_at:new Date().toISOString()
+      });
+
+      if(profile.error) throw profile.error;
+
+      /*
+       * Confirm Email is OFF, so Supabase should return
+       * a session immediately.
+       */
+      if(res.data?.session){
+
         authMsg.style.color='#7cff9b';
         authMsg.textContent='Account created successfully.';
-        setTimeout(function(){
+
+        setTimeout(()=>{
           closeAuth();
-          showStore(res.data.user);
+          showStore(user,false);
         },500);
+
       }else{
-        authMsg.style.color='#7cff9b';
-        authMsg.textContent='Account created. Check your email, then login.';
+        throw new Error(
+          'Account created, but no session was returned. Check Supabase Auth settings.'
+        );
       }
-    }else{
-      const res=await sb.auth.signInWithPassword({email:email,password:password});
-      if(res.error) throw res.error;
-      const sessionUser=res.data.user;
-      const roleRes=await sb.from('users').select('role').eq('auth_user_id',sessionUser.id).maybeSingle();
-      const isAdmin=!roleRes.error && roleRes.data && roleRes.data.role==='admin';
-      closeAuth();
-      showStore(sessionUser,isAdmin);
+
     }
+
+    /* LOGIN */
+    else{
+
+      const res=await sb.auth.signInWithPassword({
+        email,
+        password
+      });
+
+      if(res.error) throw res.error;
+
+      const user=res.data?.user;
+
+      if(!user){
+        throw new Error('Login failed.');
+      }
+
+      /*
+       * Get the existing profile and its real role.
+       */
+      let profileRes=await sb
+        .from('users')
+        .select('username,email,role')
+        .eq('auth_user_id',user.id)
+        .maybeSingle();
+
+      if(profileRes.error){
+        throw profileRes.error;
+      }
+
+      /*
+       * If an old Auth account has no public profile,
+       * create it as a customer.
+       */
+      if(!profileRes.data){
+
+        const username=
+          user.user_metadata?.username ||
+          user.email?.split('@')[0] ||
+          'Customer';
+
+        const createProfile=await sb.from('users').insert({
+          auth_user_id:user.id,
+          email:user.email,
+          username,
+          role:'customer',
+          last_login_at:new Date().toISOString(),
+          last_seen_at:new Date().toISOString()
+        });
+
+        if(createProfile.error) throw createProfile.error;
+
+        profileRes={
+          data:{
+            username,
+            email:user.email,
+            role:'customer'
+          }
+        };
+      }
+
+      const profile=profileRes.data;
+
+      /*
+       * Update login/presence without changing the role.
+       */
+      const presence=await sb
+        .from('users')
+        .update({
+          last_login_at:new Date().toISOString(),
+          last_seen_at:new Date().toISOString()
+        })
+        .eq('auth_user_id',user.id);
+
+      if(presence.error) throw presence.error;
+
+      user.user_metadata={
+        ...(user.user_metadata||{}),
+        username:profile.username || user.email?.split('@')[0],
+        role:profile.role || 'customer'
+      };
+
+      const isAdmin=profile.role==='admin';
+
+      closeAuth();
+      showStore(user,isAdmin);
+    }
+
   }catch(err){
+
+    console.error('AUTH ERROR:',err);
+
     authMsg.style.color='#ff7777';
-    authMsg.textContent=err && err.message ? err.message : 'Something went wrong.';
+    authMsg.textContent=
+      err?.message || 'Something went wrong.';
+
   }finally{
+
     authSubmit.disabled=false;
+
   }
 });
 
