@@ -12,12 +12,24 @@
 <body>
 <header><div class="logo">VIREXA X</div><button class="btn" id="logout">LOGOUT</button></header>
 <main class="wrap">
-<section class="welcome"><h1>Customer Dashboard</h1><p class="muted" id="account">Loading account...</p></section>
+<section class="welcome"><h1>DASHBOARD</h1><p class="muted" id="account">Loading account...</p></section>
 <section class="grid">
-<div class="panel"><h2>PROFILE</h2><p id="profile">Loading profile...</p></div>
+<div class="panel">
+<h2>PROFILE</h2>
+<p id="profile">Loading profile...</p>
+<div style="margin-top:16px">
+<label style="display:block;color:#aaa;font-size:.7rem;margin-bottom:7px">USERNAME</label>
+<div style="display:flex;gap:8px;flex-wrap:wrap">
+<input id="usernameInput" type="text" placeholder="Enter username" maxlength="40" style="flex:1;min-width:160px;background:#090909;border:1px solid rgba(255,0,0,.45);color:#fff;padding:10px 12px;border-radius:10px;outline:none">
+<button class="btn" id="saveUsername" type="button">SAVE</button>
+</div>
+<p id="usernameMsg" class="muted"></p>
+</div>
+</div>
 <div class="panel"><h2>ORDERS</h2><p>Your orders will appear here after the store/order system is connected.</p><span class="status">READY</span></div>
 <div class="panel"><h2>PAYMENT HISTORY</h2><p>Your payment records will appear here after payment submission is connected.</p><span class="status">READY</span></div>
 <div class="panel"><h2>NOTIFICATIONS</h2><p>Order and payment notifications will appear here.</p><span class="status">READY</span></div>
+<div class="panel"><h2>REFUND REQUEST</h2><p>Submit and track refund requests from your orders. Admin review and processing will be connected separately.</p><span class="status">READY</span></div>
 </section>
 </main>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -29,8 +41,23 @@ const supabaseClient=window.supabase.createClient('https://esefauysqukcnlmpexvp.
  const user=data.session.user;
  document.getElementById('account').textContent=user.email||'Signed in';
  const {data:profile}=await supabaseClient.from('users').select('username,email,role,telegram_username').eq('auth_user_id',user.id).maybeSingle();
- if(profile){document.getElementById('profile').innerHTML=`Username: ${profile.username||'—'}<br>Email: ${profile.email||user.email||'—'}<br>Role: ${profile.role||'customer'}`;}
- else{document.getElementById('profile').textContent='Profile record not found yet.';}
+ if(profile){
+  document.getElementById('profile').innerHTML=`Username: ${profile.username||'—'}<br>Email: ${profile.email||user.email||'—'}<br>Role: ${profile.role||'customer'}`;
+  document.getElementById('usernameInput').value=profile.username||'';
+ } else {
+  document.getElementById('profile').textContent='Profile record not found yet.';
+ }
+ document.getElementById('saveUsername').onclick=async()=>{
+  const input=document.getElementById('usernameInput');
+  const msg=document.getElementById('usernameMsg');
+  const username=input.value.trim();
+  if(!username){msg.textContent='Enter a username.';return;}
+  msg.textContent='Saving...';
+  const {error:updateError}=await supabaseClient.from('users').update({username}).eq('auth_user_id',user.id);
+  if(updateError){msg.textContent='Could not save username.';return;}
+  msg.textContent='Username saved.';
+  document.getElementById('profile').innerHTML=`Username: ${username}<br>Email: ${profile?.email||user.email||'—'}<br>Role: ${profile?.role||'customer'}`;
+ }; 
 })();
 document.getElementById('logout').onclick=async()=>{await supabaseClient.auth.signOut();window.location.href='index.html';};
 </script>
