@@ -214,13 +214,23 @@ const authMsg=document.getElementById('authMsg');
 const authSwitch=document.getElementById('authSwitch');
 const dashboard=document.getElementById('dashboard');
 const productsContainer=document.getElementById('productsContainer');
-async function loadProducts(){
+async function loadProducts(network){
   const {data,error}=await sb
     .from('products')
     .select('*')
     .eq('status','AVAILABLE')
+    .eq('network',network)
     .order('created_at',{ascending:false});
+const activeBtn=document.querySelector('.card-cat.active');
+const selectedNetwork=activeBtn ? activeBtn.dataset.network : '';
 
+let filtered=data;
+
+if(selectedNetwork){
+  filtered=data.filter(p =>
+    (p.network||'').toUpperCase()===selectedNetwork.toUpperCase()
+  );
+  }
   if(error){
     productsContainer.innerHTML='<p>Failed to load products.</p>';
     return;
@@ -231,7 +241,7 @@ async function loadProducts(){
     return;
   }
 
-  productsContainer.innerHTML=data.map(p=>`
+  productsContainer.innerHTML=filtered.map(p=>`
     <div class="vx-product">
 
       <span class="vx-status">${p.status||'AVAILABLE'}</span>
@@ -568,12 +578,33 @@ document.getElementById('adminPanelBtn').addEventListener('click',function(){
 });
 
 restoreSession();
-loadProducts();
+
+let currentNetwork='RUPAY';
+
+loadProducts(currentNetwork);
+
+document.querySelectorAll('.card-cat').forEach(function(btn){
+  btn.addEventListener('click',function(){
+
+    document.querySelectorAll('.card-cat').forEach(function(x){
+      x.classList.remove('active');
+    });
+
+    btn.classList.add('active');
+
+    currentNetwork=btn.dataset.network;
+
+    document.getElementById('cardNetwork').textContent=currentNetwork;
+
+    loadProducts(currentNetwork);
+  });
+});
 document.querySelectorAll('.card-cat').forEach(function(btn){
   btn.addEventListener('click',function(){
     document.querySelectorAll('.card-cat').forEach(function(x){x.classList.remove('active');});
     btn.classList.add('active');
     document.getElementById('cardNetwork').textContent=btn.dataset.network;
+    loadProducts();
   });
 });
 
