@@ -215,6 +215,13 @@ function fillForm(p){
   document.getElementById('delivery').value=p.delivery||'Digital';
   document.getElementById('fee').value=p.entry_fee??'';
   document.getElementById('quantity').value=p.quantity??1;
+  document.getElementById('customFields').innerHTML='';
+
+if(p.metadata){
+  Object.entries(p.metadata).forEach(([key,value])=>{
+    addCustomField(key,value);
+  });
+}
 }
 
 function startEdit(p){
@@ -233,6 +240,7 @@ function cancelEdit(){
   document.getElementById('brand').value='VIREXA X';
   document.getElementById('delivery').value='Digital';
   document.getElementById('quantity').value='1';
+  document.getElementById('customFields').innerHTML='';
   formTitle.textContent='ADD PRODUCT';
   saveBtn.textContent='ADD PRODUCT';
   cancelBtn.style.display='none';
